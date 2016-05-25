@@ -8,29 +8,34 @@ using Entity.Shared;
 namespace Entity.News
 {
 	/// <summary>
-	/// Entity News
-	/// Dùng để trả về một bài viết cụ thể
+	/// Entity News Info
+	/// Thông tin sơ lược 1 bài post, để hiển thị trên trang chủ hoặc search
 	/// 
 	/// PostId : Id bài post
-	/// Description : Mô tả của bài viết, hiển thị nếu content không có caption
-	/// Content : Nội dung bài viết (Format và type chưa rõ)
-	/// PostMember : Thông tin người đăng bài
+	/// Description : Mô tả của bài viết
+	/// Image : Hình ảnh bài viết
+	/// PostMember : Thông tin người đăng
 	/// Place : Địa điểm
 	/// Location : Địa danh
 	/// Rate : Thông tin đánh giá
-	/// Tags : List tag
-	/// Comments : List bình luận bài viết
 	/// </summary>
-	public class News
+	public class NewsInfo
 	{
 		public int PostId { set; get; }
 		public string Description { set; get; }
-		public string Content { set; get; }
+		public Image Image { set; get; }
 		public MemberInfo PostMember { set; get; }
 		public string Place { set; get; }
 		public string Location { set; get; }
 		public Rate Rate { set; get; }
-		public List<string> Tags { set; get; }
-		public List<Comment> Comments { set; get; }
+	}
+
+	/// <summary>
+	/// Collection của NewsInfo, hiển thị trên trang chủ kèm Category
+	/// </summary>
+	public class NewsInfoCollection
+	{
+		public Category Category { set; get; }
+		public List<NewsInfo> Collection { set; get; }
 	}
 }
