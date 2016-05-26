@@ -39,8 +39,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="News\CreateNews.cs" />
     <Compile Include="News\News.cs" />
+    <Compile Include="News\NewsInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="News\Comment.cs" />
+    <Compile Include="Shared\Category.cs" />
+    <Compile Include="Shared\Image.cs" />
+    <Compile Include="Shared\MemberInfo.cs" />
+    <Compile Include="Shared\Rate.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
