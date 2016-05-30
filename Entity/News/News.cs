@@ -8,29 +8,40 @@ using Entity.Shared;
 namespace Entity.News
 {
 	/// <summary>
-	/// Entity News
-	/// Dùng để trả về một bài viết cụ thể
+	/// Entity News Info
+	/// Thông tin sơ lược 1 bài post, để hiển thị trên trang chủ hoặc search
 	/// 
-	/// PostId : Id bài post
-	/// Description : Mô tả của bài viết, hiển thị nếu content không có caption
-	/// Content : Nội dung bài viết (Format và type chưa rõ)
-	/// PostMember : Thông tin người đăng bài
+	/// ID : Id bài post (dù lưu trong DB là int tự tăng, nhưng trong enity nên dùng string)
+	/// Description : Mô tả của bài viết
+	/// Image : Hình ảnh bài viết
+    /// Writer : ID người đăng
 	/// Place : Địa điểm
 	/// Location : Địa danh
 	/// Rate : Thông tin đánh giá
-	/// Tags : List tag
-	/// Comments : List bình luận bài viết
 	/// </summary>
 	public class News
 	{
-		public int PostId { set; get; }
+		public string ID { set; get; }
 		public string Description { set; get; }
-		public string Content { set; get; }
-		public MemberInfo PostMember { set; get; }
+		public List<string> ImageUrlList { set; get; }
+		public string Writer { set; get; }
 		public string Place { set; get; }
 		public string Location { set; get; }
 		public Rate Rate { set; get; }
-		public List<string> Tags { set; get; }
-		public List<Comment> Comments { set; get; }
+        public List<Category> CategoryList { set; get; }
+
+        public News(string id, string description, List<string> imgUrlList, string writer, string place, string location, Rate rate, List<Category> categoryList)
+        {
+            ID = id;
+            Description = description;
+            ImageUrlList = imgUrlList;
+            Writer = writer;
+            Place = place;
+            Location = location;
+            Rate = rate;
+            CategoryList = categoryList;
+        }
+
+        public News() { }
 	}
 }

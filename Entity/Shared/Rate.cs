@@ -20,4 +20,5 @@ namespace Entity.Shared
 		public int TotalRate { set; get; }
 		public bool IsRated { set; get; }
 	}
+    public Rate(){}
 }

@@ -12,14 +12,16 @@ namespace Entity.Shared
 	/// 
 	/// MemberId : Id người đăng
 	/// Name : Tên
-	/// Avatar : Link ảnh đại diện
+	/// AvatarUrl : Link ảnh đại diện
 	/// Url : Link đến profile
 	/// </summary>
-	public class MemberInfo
+	public class Writer
 	{
 		public int MemberId { set; get; }
 		public string Name { set; get; }
-		public Image Avatar { set; get; }
+		public string AvatarUrl { set; get; }
 		public string Url { set; get; }
-	}
+
+        public Writer() { }
+	}    
 }
