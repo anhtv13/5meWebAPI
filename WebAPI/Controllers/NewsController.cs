@@ -1,4 +1,4 @@
-﻿using _5meProjects.CustomObject;
+﻿using WebApi.CustomObject;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,47 +8,121 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
-namespace _5meProjects.Controllers
+using WebApi.Secure;
+using WebApi.Log4net;
+using Entity.News;
+namespace WebApi.Controllers
 {
     public class NewsController : ApiController
     {
-        private int m_counter = 0;
-        private object m_lock = new object();
-
-        #region Counter
-        private bool CheckCounter()
-        {
-            lock (m_lock)
-            {
-                if (m_counter < 100)
-                {
-                    m_counter++;
-                    return true;
-                }
-                return false;
-            }
-        }
-
-        private void DecreaseCounter()
-        {
-            lock (m_lock)
-            {
-                m_counter--;
-            }
-        }
-        #endregion
+        ////[HttpGet]
+        //public object RequestNewsForHomePage()
+        //{
+        //    try
+        //    {
+        //        if (Counter.Instance.CheckCounter())
+        //            throw new NotImplementedException();
+        //        else
+        //            return new ErrorObject(HttpStatusCode.ServiceUnavailable, ErrorMessage.ServerOverloaded);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ErrorObject(HttpStatusCode.InternalServerError, string.Empty);
+        //    }
+        //    finally
+        //    {
+        //        Counter.Instance.DecreaseCounter();
+        //    }
+        //}
 
         [HttpGet]
-        public void RequestNewsForHomePage()
+        public object Category()
         {
-            if (CheckCounter())
+            if (Counter.Instance.CheckCounter())
             {
-                Request.CreateResponse(HttpStatusCode.OK, "test ok");
+                try
+                {
+                    return NewsManager.Instance.GetCategoryList();
+                }
+                catch (Exception ex)
+                {
+                    return new ResultObject(false, ErrorMessage.InternalServerError, string.Empty);
+                }
+                finally
+                {
+                    Counter.Instance.DecreaseCounter();
+                }
             }
             else
-                Request.CreateErrorResponse(HttpStatusCode.ServiceUnavailable, "Server Overloaded");
+                return new ErrorObject(HttpStatusCode.ServiceUnavailable, ErrorMessage.ServerOverloaded);
+        }
 
-            DecreaseCounter();
+        [HttpGet]
+        public object NewsByTag(string tag, int index = 0, int offset = 10)
+        {
+            if (Counter.Instance.CheckCounter())
+            {
+                try
+                {
+                    var data = NewsManager.Instance.GetNewsByTag(tag, index, offset, false);
+                    return data;
+                }
+                catch (Exception ex)
+                {
+                    return new ErrorObject(HttpStatusCode.InternalServerError, ErrorMessage.InternalServerError);
+                }
+                finally
+                {
+                    Counter.Instance.DecreaseCounter();
+                }
+            }
+            else
+                return new ErrorObject(HttpStatusCode.ServiceUnavailable, ErrorMessage.ServerOverloaded);
+        }
+
+        [HttpGet]
+        public object News(string idCategory, int index = 0, int offset = 10)
+        {
+            if (Counter.Instance.CheckCounter())
+            {
+                try
+                {
+                    var data = NewsManager.Instance.GetNewsByCategory(idCategory, index, offset, false);
+                    return data;
+                }
+                catch (Exception ex)
+                {
+                    return new ErrorObject(HttpStatusCode.InternalServerError, ErrorMessage.InternalServerError);
+                }
+                finally
+                {
+                    Counter.Instance.DecreaseCounter();
+                }
+            }
+            else
+                return new ErrorObject(HttpStatusCode.ServiceUnavailable, ErrorMessage.ServerOverloaded);
+        }
+
+        [HttpGet]
+        public object News(string id)
+        {
+            if (Counter.Instance.CheckCounter())
+            {
+                try
+                {
+                    return NewsManager.Instance.GetDetailedNewsById(id);
+                }
+                catch (Exception ex)
+                {
+                    return new ErrorObject(HttpStatusCode.InternalServerError, ErrorMessage.InternalServerError);
+                }
+                finally
+                {
+                    Counter.Instance.DecreaseCounter();
+                }
+            }
+            else
+                return new ErrorObject(HttpStatusCode.ServiceUnavailable, ErrorMessage.ServerOverloaded);
         }
     }
 }

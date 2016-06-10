@@ -1,4 +1,4 @@
-﻿using Entity.Shared;
+﻿using Entity.News;
 using System;
 using System.Collections.Generic;
 using System.Linq;

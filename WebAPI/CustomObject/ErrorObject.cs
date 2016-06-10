@@ -5,7 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _5meProjects.CustomObject
+namespace WebApi.CustomObject
 {
     public class ErrorObject
     {

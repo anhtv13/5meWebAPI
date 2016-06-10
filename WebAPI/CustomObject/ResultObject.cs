@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _5meProjects.CustomObject
+namespace WebApi.CustomObject
 {
     /// <summary>
     /// Trả về kết quả xử lí ở tầng manager
@@ -28,12 +28,21 @@ namespace _5meProjects.CustomObject
             set { m_errorMessage = value; }
         }
 
+        private object m_data;
+
+        public object Data
+        {
+            get { return m_data; }
+            set { m_data = value; }
+        }
+
         public ResultObject(){}
 
-        public ResultObject(bool result, string errorMessage)
+        public ResultObject(bool result, string errorMessage, object data)
         {
             this.Result = result;
             this.ErrorMessage = errorMessage;
+            this.Data = data;
         }
     }
 }
