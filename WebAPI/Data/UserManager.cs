@@ -107,7 +107,7 @@ namespace WebApi.Log4net
                 }
             }
             if (user == null)
-                return new ErrorObject(HttpStatusCode.Forbidden, ErrorMessage.AuthenFailed);
+                throw new Exception(ErrorMessage.AuthenFailed);
 
             //tạo token chứa thông tin cusid, username, sessionId, createAt
             Guid sessionId = Guid.NewGuid();

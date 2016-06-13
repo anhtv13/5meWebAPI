@@ -9,14 +9,6 @@ namespace WebApi.CustomObject
 {
     public class ErrorObject
     {
-        private HttpStatusCode m_code;
-
-        public HttpStatusCode Code
-        {
-            get { return m_code; }
-            set { m_code = value; }
-        }
-
         private string m_message;
 
         public string Message
@@ -25,9 +17,8 @@ namespace WebApi.CustomObject
             set { m_message = value; }
         }
 
-        public ErrorObject(HttpStatusCode code, string message)
+        public ErrorObject(string message)
         {
-            m_code = code;
             m_message = message;
         }
     }

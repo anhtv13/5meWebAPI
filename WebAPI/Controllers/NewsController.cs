@@ -15,6 +15,8 @@ namespace WebApi.Controllers
 {
     public class NewsController : ApiController
     {
+        private IptLogger m_log = new IptLogger("UserController");
+
         ////[HttpGet]
         //public object RequestNewsForHomePage()
         //{
@@ -46,7 +48,9 @@ namespace WebApi.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return new ResultObject(false, ErrorMessage.InternalServerError, string.Empty);
+                    m_log.Error(ex.ToString());
+
+                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ErrorMessage.InternalServerError);
                 }
                 finally
                 {
@@ -54,7 +58,7 @@ namespace WebApi.Controllers
                 }
             }
             else
-                return new ErrorObject(HttpStatusCode.ServiceUnavailable, ErrorMessage.ServerOverloaded);
+                return Request.CreateErrorResponse(HttpStatusCode.ServiceUnavailable, ErrorMessage.ServerOverloaded);
         }
 
         [HttpGet]
@@ -69,7 +73,9 @@ namespace WebApi.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return new ErrorObject(HttpStatusCode.InternalServerError, ErrorMessage.InternalServerError);
+                    m_log.Error(ex.ToString());
+
+                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ErrorMessage.InternalServerError);
                 }
                 finally
                 {
@@ -77,7 +83,7 @@ namespace WebApi.Controllers
                 }
             }
             else
-                return new ErrorObject(HttpStatusCode.ServiceUnavailable, ErrorMessage.ServerOverloaded);
+                return Request.CreateErrorResponse(HttpStatusCode.ServiceUnavailable, ErrorMessage.ServerOverloaded);
         }
 
         [HttpGet]
@@ -92,7 +98,9 @@ namespace WebApi.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return new ErrorObject(HttpStatusCode.InternalServerError, ErrorMessage.InternalServerError);
+                    m_log.Error(ex.ToString());
+
+                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ErrorMessage.InternalServerError);
                 }
                 finally
                 {
@@ -100,7 +108,7 @@ namespace WebApi.Controllers
                 }
             }
             else
-                return new ErrorObject(HttpStatusCode.ServiceUnavailable, ErrorMessage.ServerOverloaded);
+                return Request.CreateErrorResponse(HttpStatusCode.ServiceUnavailable, ErrorMessage.ServerOverloaded);
         }
 
         [HttpGet]
@@ -114,7 +122,9 @@ namespace WebApi.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return new ErrorObject(HttpStatusCode.InternalServerError, ErrorMessage.InternalServerError);
+                    m_log.Error(ex.ToString());
+
+                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ErrorMessage.InternalServerError);
                 }
                 finally
                 {
@@ -122,7 +132,7 @@ namespace WebApi.Controllers
                 }
             }
             else
-                return new ErrorObject(HttpStatusCode.ServiceUnavailable, ErrorMessage.ServerOverloaded);
+                return Request.CreateErrorResponse(HttpStatusCode.ServiceUnavailable, ErrorMessage.ServerOverloaded);
         }
     }
 }
