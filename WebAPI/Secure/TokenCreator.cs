@@ -11,23 +11,23 @@ using System.Threading.Tasks;
 
 namespace WebApi.Secure
 {
-    public class SecureHelper
+    public class TokenCreator
     {
-        private static SecureHelper m_secureHelper;
+        private static TokenCreator m_secureHelper;
 
-        public static SecureHelper Instance
+        public static TokenCreator Instance
         {
             get
             {
                 if (m_secureHelper == null)
-                    m_secureHelper = new SecureHelper();
+                    m_secureHelper = new TokenCreator();
                 return m_secureHelper;
             }
         }
 
         private X509Certificate2 m_certificate;
 
-        private SecureHelper()
+        private TokenCreator()
         {
             InitSecureKey();
         }

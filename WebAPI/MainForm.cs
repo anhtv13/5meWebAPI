@@ -41,8 +41,8 @@ namespace WebApi
                     { "email", "abc@gmail.com" },
                     {"createAt", DateTime.Now}
                 };
-            string token = SecureHelper.Instance.CreateToken(payload);
-            bool v = SecureHelper.Instance.VerifySignature(token);
+            string token = TokenCreator.Instance.CreateToken(payload);
+            bool v = TokenCreator.Instance.VerifySignature(token);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -97,11 +97,11 @@ namespace WebApi
                 m_server.OpenAsync().Wait();
                 btnStart.Enabled = false;
                 btnStop.Enabled = true;
-                m_log.Debug("Server starts at " + baseAddress + " successfully.");
+                m_log.Debug("-----Server starts at " + baseAddress + " successfully.-----");
             }
             catch (Exception ex)
             {
-                m_log.Error(ex.Message + ". Can't start server.");
+                m_log.Error(ex.ToString() + "\n -----Can't start server.-----");
             }
         }
 
@@ -117,7 +117,7 @@ namespace WebApi
             }
             catch (Exception ex)
             {
-                m_log.Error(ex.Message);
+                m_log.Error(ex.ToString());
             }
         }
 

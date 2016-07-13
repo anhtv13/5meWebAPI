@@ -16,16 +16,16 @@ namespace Entity.News
         public string Content { set; get; }
         public List<string> TagList { set; get; }
         public List<Comment> CommentList { set; get; }
-        public List<string> UrlList { set; get; }
         public bool IsApproved { set; get; }
 
-        public DetailedNews(string postId, string description, List<string> imgUrlList, string writer, string place, string location, Rate rate, string content, List<string> tagList, List<Comment> cmtList, List<string> categoryList, List<string> urlList, DateTime dt, bool isApproved = false)
+        public DetailedNews(string postId, string description, List<string> imgUrlList, string writer,
+            string place, string location, Rate rate, string content, List<string> tagList, List<Comment> cmtList,
+            List<string> categoryList, DateTime dt, bool isApproved = false)
             : base(postId, description, imgUrlList, writer, place, location, rate, categoryList, dt)
         {
             this.Content = content;
             this.TagList = tagList;
             this.CommentList = cmtList;
-            this.UrlList = urlList;
             this.IsApproved = isApproved;
         }
 

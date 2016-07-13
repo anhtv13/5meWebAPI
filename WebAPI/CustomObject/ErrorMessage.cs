@@ -19,6 +19,9 @@ namespace WebApi.CustomObject
         public static string Forbidden = "Forbidden";
         public static string AuthenFailed = "AuthenFailed";
 
+        //Register
+        public static string RegisterFailed = "RegisterFailed";
+
         //Data
         public static string NotFound = "NotFound";
 

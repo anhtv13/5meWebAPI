@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace WebApi.Log4net
 {
@@ -43,7 +44,7 @@ namespace WebApi.Log4net
 
             DetailedNews news1 = new DetailedNews("123", "Test1", null, "anhtv", "DongDa", "Hanoi", new Rate(20, 180),
                 "Roquefort là một loại pho mát có mùi thơm, cay, nổi bật với những chấm xanh mốc nên không phải ai cũng thích. Tuy nhiên, những người mê loại pho mát này luôn khẳng định đây là pho mát xanh ngon nhất thế giới. \nLoại thực phẩm đặc biệt này được sản xuất tại ngôi làng nhỏ Roquefort-sur-Soulzon, trong một khu cao nguyên đá vôi ở Causse du Larzac, miền nam nước Pháp. Bên trong các hang động tối và ướt át với độ ẩm lên tới 90%, sữa cừu được chế biến cho chín tới và làm thành từng khuôn pho mát Roquefort theo phương pháp lưu giữ hàng thế kỷ qua. ",
-                new List<string>() { "Fromage", "Roquefort", "Test" }, null, new List<string>() { cat1.Code }, null, DateTime.Now, true);
+                new List<string>() { "Fromage", "Roquefort", "Test" }, null, new List<string>() { cat1.Code },DateTime.Now, true);
 
             m_categoryList.Add(cat1.Code, cat1); m_categoryList.Add(cat2.Code, cat2); m_categoryList.Add(cat3.Code, cat3);
             m_detailedNewsDict.Add(news1.ID, news1);
@@ -172,7 +173,7 @@ namespace WebApi.Log4net
             }
         }
 
-        public object GetNewsByKeyword(string keyword, int index, int offset)
+        public object GetNewsByKeyword(string keyword, int index, int offset, bool isAdmin)
         {
             throw new NotImplementedException();
         }
@@ -208,78 +209,60 @@ namespace WebApi.Log4net
             {
                 if (m_detailedNewsDict[newsid].WriterId == userid)
                     return true;
-                else
-                    return false;
             }
-            else
-                return false;
+            return false;
         }
 
-        public object RequestUploadNews(CreateNews news, string userid)
+        public object RequestUploadNews(string newsString, string userid)
         {
+            CreateNews news = JsonConvert.DeserializeObject<CreateNews>(newsString);
             news.WriterId = userid;
             //lưu vào cloud rồi lấy url, sau khi lấy url thì xóa List<Image> đi để giảm cache, ép kiểu ngược lại thành DetailedNews rồi cache
 
             //luu vao DB, tra lai newsID roi cap nhat vao cache
+            m_detailedNewsDict.Add(news.ID, news);
             throw new NotImplementedException();
         }
 
-        public object RequestEditNews(DetailedNews news, string userid)
+        public object RequestEditNews(DetailedNews news)
         {
             if (!m_detailedNewsDict.ContainsKey(news.ID))
-            {
-                return new ResultObject(false, "NewsID not found.", null);
-            }
+                throw new Exception(ErrorMessage.NotFound);
 
             //kiểm tra trong DB có ko, nếu có thì load vào cache
-
-            if (IsWriter(news.ID, userid))
-            {
-                m_detailedNewsDict[news.ID].Description = news.Description;
-                m_detailedNewsDict[news.ID].Content = news.Content;
-                m_detailedNewsDict[news.ID].Location = news.Location;
-                m_detailedNewsDict[news.ID].Place = news.Place;
-                m_detailedNewsDict[news.ID].TagList = news.TagList;
-                return m_detailedNewsDict[news.ID];
-            }
-            else
-                return new ResultObject(false, ErrorMessage.Forbidden, null);
+            m_detailedNewsDict[news.ID].Description = news.Description;
+            m_detailedNewsDict[news.ID].Content = news.Content;
+            m_detailedNewsDict[news.ID].Location = news.Location;
+            m_detailedNewsDict[news.ID].Place = news.Place;
+            m_detailedNewsDict[news.ID].TagList = news.TagList;
+            return m_detailedNewsDict[news.ID];
         }
 
-        public object RequestDeleteNews(string newsId, string userid)
+        public object RequestDeleteNews(string newsId)
         {
-            if (IsWriter(newsId, userid) || IsAdmin(userid))
-            {
-                //-xóa trong cache                
-                m_detailedNewsDict.Remove(newsId);
-                //-ko xóa trong DB, bản chất vẫn giữ lại nhưng đánh dấu disable trong DB
-                //nếu trong Db ko tìm thấy trả về lỗi not found
+            //-xóa trong cache                
+            m_detailedNewsDict.Remove(newsId);
+            //-ko xóa trong DB, bản chất vẫn giữ lại nhưng đánh dấu disable trong DB
+            //nếu trong Db ko tìm thấy trả về lỗi not found
 
-                return new ResultObject(true, null, m_detailedNewsDict[newsId]);
-            }
-            return new ResultObject(false, ErrorMessage.Forbidden.ToString(), null);
+            return new ResultObject(true, null, m_detailedNewsDict[newsId]);
         }
 
-        public object DeleteCommentFromNews(string newsId, string userId, string commentId)
+        public object DeleteCommentFromNews(string newsId, string commentId)
         {
-            if (IsWriter(newsId, userId) || IsAdmin(userId))
+            //nếu có trong cache thì cập nhật
+            if (m_detailedNewsDict.ContainsKey(newsId))
             {
-                //nếu có trong cache thì cập nhật
-                if (m_detailedNewsDict.ContainsKey(newsId))
+                foreach (Comment cmt in m_detailedNewsDict[newsId].CommentList)
                 {
-                    foreach (Comment cmt in m_detailedNewsDict[newsId].CommentList)
-                    {
-                        if (cmt.ID == commentId)
-                            m_detailedNewsDict[newsId].CommentList.Remove(cmt);
-                    }
+                    if (cmt.ID == commentId)
+                        m_detailedNewsDict[newsId].CommentList.Remove(cmt);
                 }
-
-                //luu vao DB                
-
-                return new ResultObject(true, null, m_detailedNewsDict[newsId]);
             }
-            else
-                return new ResultObject(false, ErrorMessage.Forbidden.ToString(), null);
+
+            //luu vao DB                
+
+            return new ResultObject(true, null, m_detailedNewsDict[newsId]);
         }
 
         public object AddCommentToNews(string newsId, Comment cmt)
@@ -303,36 +286,24 @@ namespace WebApi.Log4net
         #endregion
 
         #region Admin User
-        public bool IsAdmin(string userid)
-        {
-            throw new NotImplementedException();
-        }
-
-        public object Admin_ApproveNews(string newsId, string userid, bool approve)
+        public object Admin_ApproveNews(string newsId, bool approved)
         {
             //-kiểm tra cache
             //-nếu chưa có kiểm tra DB
             //nếu ko tồn tại trong DB, trả lỗi
             //nếu tồn tại trong DB, add vào cache
-            if (!m_detailedNewsDict.ContainsKey(userid))
-            {
-            }
-
-            if (IsAdmin(userid))
+            if (!m_detailedNewsDict.ContainsKey(newsId))
+                return new ResultObject(false, ErrorMessage.NotFound, null);
+            else
             {
                 m_detailedNewsDict[newsId].IsApproved = true;
-                //lưu vào DB
-
                 return new ResultObject(true, null, m_detailedNewsDict[newsId]);
             }
-
-            else
-                return new ResultObject(false, ErrorMessage.NotFound, null);
         }
 
-        public object Admin_GetNewsByCategory(string categoryId, int index, int offset, string userid)
+        public object Admin_GetNewsByCategory(string categoryId, int index, int offset, bool isAdmin)
         {
-            if (IsAdmin(userid))
+            if (isAdmin)
                 return GetNewsByCategory(categoryId, index, offset, true);
             else
                 return GetNewsByCategory(categoryId, index, offset, false);

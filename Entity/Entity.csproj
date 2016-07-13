@@ -51,8 +51,9 @@
     <Compile Include="News\Category.cs" />
     <Compile Include="Shared\Writer.cs" />
     <Compile Include="Shared\Rate.cs" />
-    <Compile Include="User\AuthenRequest.cs" />
-    <Compile Include="User\TokenObject.cs" />
+    <Compile Include="Authen\AuthenRequest.cs" />
+    <Compile Include="Authen\TokenObject.cs" />
+    <Compile Include="User\RegisterUser.cs" />
     <Compile Include="User\User.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

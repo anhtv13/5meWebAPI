@@ -10,7 +10,7 @@ namespace WebApi.Secure
     /// <summary>
     /// Reference: http://stackoverflow.com/questions/8890902/c-comparing-the-password-hash-with-the-user-input-different-sizes-when-authe
     /// </summary>
-    public class Crypto
+    public class HashedPassword
     {
         public static byte[] GetHash(string password, string salt)
         {
